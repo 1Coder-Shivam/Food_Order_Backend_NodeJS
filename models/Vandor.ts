@@ -13,7 +13,7 @@ interface VandorDoc extends Document {
     serviceAvailable: string;
     coverImage: [string];
     rating: number;
-    foods: any;
+    // foods: any;
 
 }
 
@@ -30,9 +30,18 @@ const VandorSchema = new Schema({
     serviceAvailable: { type: String, required: true },
     coverImage: [{ type: String, required: true }],
     rating: { type: Number, required: true },
-    foods: [{ type: Schema.Types.ObjectId, ref: "Food" }]
+    // foods: [{ type: Schema.Types.ObjectId, ref: "Food" }]
 },
     {
+        toJSON: {
+            transform: (doc, ret, options) => {
+                delete ret.password;
+                delete ret.salt;
+                delete ret.__v;
+                delete ret.createdAt;
+                delete ret.updatedAt;
+            }
+        },
         timestamps: true
     });
 

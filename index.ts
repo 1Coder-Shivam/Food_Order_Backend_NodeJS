@@ -13,10 +13,7 @@ app.use('/admin', AdminRoute);
 app.use('/vandor', VandorRoute);
 
 mongoose
-      .connect(MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      } as ConnectOptions)
+      .connect(MONGO_URI)
       .then((res) => {
         console.log(
           'Connected to Distribution API Database - Initial Connection'
