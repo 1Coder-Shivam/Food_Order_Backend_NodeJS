@@ -16,12 +16,12 @@ mongoose
       .connect(MONGO_URI)
       .then((res) => {
         console.log(
-          'Connected to Distribution API Database - Initial Connection'
+          'Connected to Database successfully'
         );
       })
       .catch((err) => {
         console.log(
-          `Initial Distribution API Database connection error occured -`,
+          `Database connection error occured -`,
           err
         );
       });
