@@ -2,6 +2,8 @@ import e, { Request, Response, NextFunction } from "express";
 import { UpdateVandorInput, VandorLoginInputs } from "../dto";
 import { FindVandor } from "./AdminController";
 import { GenerateSignature, ValidatePassword } from "../utility";
+import { CreateFoodInputs } from "../dto/Food.dto";
+import { Food } from "../models";
 
 export const VandorLogin = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = <VandorLoginInputs>req.body;
@@ -37,7 +39,7 @@ export const VandorLogin = async (req: Request, res: Response, next: NextFunctio
 
 export const GetVandorProfile = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-    if(user){
+    if (user) {
         const existingVandor = await FindVandor(user._id);
         return res.json(existingVandor);
     }
@@ -48,11 +50,11 @@ export const GetVandorProfile = async (req: Request, res: Response, next: NextFu
 }
 
 export const UpdateVandorProfile = async (req: Request, res: Response, next: NextFunction) => {
-    const {name, address, phone, foodType} = <UpdateVandorInput>req.body;
+    const { name, address, phone, foodType } = <UpdateVandorInput>req.body;
     const user = req.user;
-    if(user){
+    if (user) {
         const existingVandor = await FindVandor(user._id);
-        if(existingVandor!==null){
+        if (existingVandor !== null) {
             existingVandor.name = name;
             existingVandor.address = address;
             existingVandor.phone = phone;
@@ -60,7 +62,7 @@ export const UpdateVandorProfile = async (req: Request, res: Response, next: Nex
             const updatedUser = await existingVandor.save();
             // console.log(updatedUser);
             return res.json(updatedUser);
-        
+
         }
         return res.json(existingVandor);
     }
@@ -73,20 +75,67 @@ export const UpdateVandorProfile = async (req: Request, res: Response, next: Nex
 
 export const UpdateVandorService = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
-    if(user){
+    if (user) {
         const existingVandor = await FindVandor(user._id);
-        if(existingVandor!==null){
+        if (existingVandor !== null) {
             existingVandor.serviceAvailable = !existingVandor.serviceAvailable;
             const updatedUser = await existingVandor.save();
             // console.log(updatedUser);
             return res.json(updatedUser);
-        
+
         }
         return res.json(existingVandor);
     }
 
     return res.status(404).json({
         message: "Vandor not found"
+    });
+
+}
+
+export const AddFood = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if (user) {
+        const { name, description, category, foodType, readyTime, price } = <CreateFoodInputs>req.body;
+        const vandor = await FindVandor(user._id);
+        if (vandor !== null) {
+            const files = req.files as [Express.Multer.File];
+            const images = files.map((file: Express.Multer.File) => file.filename);
+            const createdFood = await Food.create({
+                vandorId: vandor.id,
+                name: name,
+                description: description,
+                category: category,
+                foodType: foodType,
+                readyTime: readyTime,
+                images: images,
+                price: price,
+                rating: 0
+            })
+
+            vandor.foods.push(createdFood);
+            const result = await vandor.save();
+            return res.json(result);
+        }
+    }
+
+    return res.status(404).json({
+        message: "Something went wrong with adding food"
+    });
+
+}
+
+export const GetFoods = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if (user) {
+        const foods = await Food.find({ vandorId: user._id });
+        if (foods !== null) {
+            return res.json(foods);
+        }
+    }
+
+    return res.status(404).json({
+        message: "something went wrong with getting food"
     });
 
 }
