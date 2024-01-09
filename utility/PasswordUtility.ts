@@ -14,7 +14,7 @@ export const GeneratePassword = async (password: string, salt: string) => {
 }
 
 export const ValidatePassword = async (enteredPassword: string, savedPassword: string, salt: string) => {
-    return await GeneratePassword(enteredPassword, salt) == savedPassword;
+    return await GeneratePassword(enteredPassword, salt) === savedPassword;
 }
 
 export const GenerateSignature = (payload: VandorPayload) => {

@@ -10,7 +10,7 @@ interface VandorDoc extends Document {
     email: string;
     password: string;
     salt: string;
-    serviceAvailable: string;
+    serviceAvailable: Boolean;
     coverImage: [string];
     rating: number;
     // foods: any;
@@ -27,7 +27,7 @@ const VandorSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     salt: { type: String, required: true },
-    serviceAvailable: { type: String, required: true },
+    serviceAvailable: { type: Boolean, required: true },
     coverImage: [{ type: String, required: true }],
     rating: { type: Number, required: true },
     // foods: [{ type: Schema.Types.ObjectId, ref: "Food" }]

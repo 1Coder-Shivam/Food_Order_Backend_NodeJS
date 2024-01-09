@@ -16,6 +16,6 @@ export const Authenticate = async (req: Request, res: Response, next: NextFuncti
     if(validate){
         next();
     }else{
-        return res.json({"message": "Valid Signature"});
+        return res.json({"message": "Unauthorized User"});
     }
 }

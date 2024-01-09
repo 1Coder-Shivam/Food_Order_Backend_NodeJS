@@ -1,5 +1,5 @@
 import e, { Request, Response, NextFunction } from "express";
-import { VandorLoginInputs } from "../dto";
+import { UpdateVandorInput, VandorLoginInputs } from "../dto";
 import { FindVandor } from "./AdminController";
 import { GenerateSignature, ValidatePassword } from "../utility";
 
@@ -35,8 +35,58 @@ export const VandorLogin = async (req: Request, res: Response, next: NextFunctio
 
 }
 
-export const GetVandorProfile = async (req: Request, res: Response, next: NextFunction) => {}
+export const GetVandorProfile = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if(user){
+        const existingVandor = await FindVandor(user._id);
+        return res.json(existingVandor);
+    }
 
-export const UpdateVandorProfile = async (req: Request, res: Response, next: NextFunction) => {}
+    return res.status(404).json({
+        message: "Vandor not found"
+    });
+}
 
-export const UpdateVandorService = async (req: Request, res: Response, next: NextFunction) => {}
+export const UpdateVandorProfile = async (req: Request, res: Response, next: NextFunction) => {
+    const {name, address, phone, foodType} = <UpdateVandorInput>req.body;
+    const user = req.user;
+    if(user){
+        const existingVandor = await FindVandor(user._id);
+        if(existingVandor!==null){
+            existingVandor.name = name;
+            existingVandor.address = address;
+            existingVandor.phone = phone;
+            existingVandor.foodType = foodType;
+            const updatedUser = await existingVandor.save();
+            // console.log(updatedUser);
+            return res.json(updatedUser);
+        
+        }
+        return res.json(existingVandor);
+    }
+
+    return res.status(404).json({
+        message: "Vandor not found"
+    });
+
+}
+
+export const UpdateVandorService = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if(user){
+        const existingVandor = await FindVandor(user._id);
+        if(existingVandor!==null){
+            existingVandor.serviceAvailable = !existingVandor.serviceAvailable;
+            const updatedUser = await existingVandor.save();
+            // console.log(updatedUser);
+            return res.json(updatedUser);
+        
+        }
+        return res.json(existingVandor);
+    }
+
+    return res.status(404).json({
+        message: "Vandor not found"
+    });
+
+}
