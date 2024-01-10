@@ -71,6 +71,25 @@ export const UpdateVandorProfile = async (req: Request, res: Response, next: Nex
     });
 
 }
+export const UpdateVandorCoverImage = async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+    if (user) {
+        
+        const vandor = await FindVandor(user._id);
+        if (vandor !== null) {
+            const files = req.files as [Express.Multer.File];
+            const images = files.map((file: Express.Multer.File) => file.filename);
+            vandor.coverImage.push(...images);
+            const result = await vandor.save();
+            return res.json(result);
+        }
+    }
+
+    return res.status(404).json({
+        message: "Something went wrong with adding food"
+    });
+
+}
 
 export const UpdateVandorService = async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
