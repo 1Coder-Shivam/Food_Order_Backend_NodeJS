@@ -13,7 +13,7 @@ interface FoodDoc extends Document {
 }
 
 const FoodSchema = new Schema({
-    vandorId: {type: Schema.Types.ObjectId, ref: "Vandor", required: true},
+    vandorId: {type: String, required: true},
     name: {type: String, required: true},
     description: {type: String, required: true},
     category: {type: String, required: true},
@@ -21,7 +21,7 @@ const FoodSchema = new Schema({
     readyTime: {type: Number, required: true},
     price: {type: Number, required: true},
     rating: {type: Number, required: true},
-    images: [{type: String, required: true}]
+    images: [{type: String}]
 },
 {
     toJSON: {

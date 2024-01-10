@@ -1,8 +1,7 @@
-import e, { Request, Response, NextFunction } from "express";
-import { UpdateVandorInput, VandorLoginInputs } from "../dto";
+import { Request, Response, NextFunction } from "express";
+import { CreateFoodInputs, UpdateVandorInput, VandorLoginInputs } from "../dto";
 import { FindVandor } from "./AdminController";
 import { GenerateSignature, ValidatePassword } from "../utility";
-import { CreateFoodInputs } from "../dto/Food.dto";
 import { Food } from "../models";
 
 export const VandorLogin = async (req: Request, res: Response, next: NextFunction) => {
