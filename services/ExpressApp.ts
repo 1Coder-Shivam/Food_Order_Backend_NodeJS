@@ -12,10 +12,9 @@ export default async (app: Application) => {
 
     app.use('/admin', AdminRoute);
     app.use('/vandor', VandorRoute);
-    app.use('/customer', CustomerRoute)
+    app.use('/customer', CustomerRoute);
     app.use(ShoppingRoute);
     return app;
-
 }
 
 
